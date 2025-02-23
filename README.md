@@ -52,9 +52,10 @@ print(tokenizer.decode(output[0], skip_special_tokens=True))
 If you find HeadInfer useful for your research, please cite:
 
 ```bibtex
-@article{luo2024headinfer,
+@article{luo2025headinfer,
   title={HeadInfer: Memory-Efficient LLM Inference by Head-wise Offloading},
-  author={Cheng Luo, Zefan Cai, Hanshi Sun, Jinqi Xiao, Bo Yuan, Wen Xiao, Junjie Hu, Jiawei Zhao, Beidi Chen, Anima Anandkumar},
-  year={2025},
+  author={Luo, Cheng and Cai, Zefan and Sun, Hanshi and Xiao, Jinqi and Yuan, Bo and Xiao, Wen and Hu, Junjie and Zhao, Jiawei and Chen, Beidi and Anandkumar, Anima},
+  journal={arXiv preprint arXiv:2502.12574},
+  year={2025}
 }
 ```
