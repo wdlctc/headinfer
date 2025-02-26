@@ -4,6 +4,8 @@
 ![Python](https://img.shields.io/badge/python-3.8%2B-blue)  
 ![PyTorch](https://img.shields.io/badge/PyTorch-1.12%2B-orange)  
 
+[[paper](https://arxiv.org/abs/2502.12574)]
+
 ## Overview  
 
 **HeadInfer** is a memory-efficient inference framework for large language models (LLMs) that significantly reduces GPU memory consumption by leveraging a **head-wise offloading** strategy. Unlike traditional layer-wise KV cache offloading, **HeadInfer** dynamically manages attention heads, maintaining only a subset of the KV cache on the GPU while offloading the rest to CPU memory.  
@@ -20,17 +22,38 @@ With **HeadInfer**, an **8B model can process up to 4 million tokens on a single
 
 ## Installation  
 
+#### Training and Evaluation Environment
+
 ```bash
-git clone https://github.com/your_username/HeadInfer.git
-cd HeadInfer
-pip install -r requirements.txt
+conda create -yn duo python=3.10
+conda activate duo
+
+conda install -y git
+conda install -y nvidia/label/cuda-12.4.0::cuda-toolkit
+conda install -y nvidia::cuda-cudart-dev
+conda install -y pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvidia
+
+pip install transformers==4.45.2 accelerate 
+pip install flash-attn --no-build-isolation
 ```
+
+
 ## Usage  
+
+One-click-run with HeadInfer
+
+```bash
+python main.py
+```
 
 Running Inference with HeadInfer
 ```python
-from headinfer import HeadInferModel
+
 from transformers import AutoModelForCausalLM, AutoTokenizer
+
+
+from headinfer.cache import OffloadedCache
+from headinfer.mp import mp_headinfer, mp_simulate_decode
 
 model_name = "meta-llama/Meta-Llama-3-8B"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -43,8 +66,14 @@ headinfer_model = HeadInferModel(model)
 input_text = "Once upon a time in a galaxy far, far away..."
 input_ids = tokenizer(input_text, return_tensors="pt").input_ids
 
-output = headinfer_model.generate(input_ids, max_length=4000000)
-print(tokenizer.decode(output[0], skip_special_tokens=True))
+
+with torch.inference_mode():
+
+    # patch the model
+    mp_headinfer(model)
+    past_key_values = OffloadedCache()
+
+    model(input_ids=input_ids, past_key_values=past_key_values, use_cache=True, num_logits_to_keep=1)
 
 ```
 
