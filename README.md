@@ -35,6 +35,7 @@ conda install -y pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c 
 
 pip install transformers==4.45.2 accelerate 
 pip install flash-attn --no-build-isolation
+pip install git+https://github.com/wdlctc/headinfer.git@main
 ```
 
 
