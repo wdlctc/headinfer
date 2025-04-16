@@ -48,7 +48,7 @@ python main.py
 
 Running Inference with HeadInfer
 ```python
-
+import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
@@ -58,9 +58,6 @@ from headinfer.mp import mp_headinfer, mp_simulate_decode
 model_name = "meta-llama/Meta-Llama-3-8B"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
-
-# Wrap the model with HeadInfer
-headinfer_model = HeadInferModel(model)
 
 # Generate text with long context
 input_text = "Once upon a time in a galaxy far, far away..."
