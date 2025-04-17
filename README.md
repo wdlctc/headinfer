@@ -25,8 +25,8 @@ With **HeadInfer**, an **8B model can process up to 4 million tokens on a single
 #### Training and Evaluation Environment
 
 ```bash
-conda create -yn duo python=3.10
-conda activate duo
+conda create -yn headinfer python=3.10
+conda activate headinfer
 
 conda install -y git
 conda install -y nvidia/label/cuda-12.4.0::cuda-toolkit
