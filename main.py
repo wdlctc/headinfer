@@ -8,7 +8,8 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
 from headinfer.cache import OffloadedCache
 from headinfer.mp import mp_headinfer, mp_simulate_decode
 
-# Load the model
+# Load the 
+# Qwen support: ckpt = "Qwen/Qwen2.5-7B-Instruct"
 ckpt = "gradientai/Llama-3-8B-Instruct-Gradient-1048k"
 tokenizer = AutoTokenizer.from_pretrained(ckpt, use_fast=False)
 model = AutoModelForCausalLM.from_pretrained(ckpt, torch_dtype=torch.bfloat16, low_cpu_mem_usage=True, attn_implementation="flash_attention_2").to("cuda")
