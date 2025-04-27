@@ -35,6 +35,7 @@ conda install -y pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c 
 
 pip install transformers==4.45.2 accelerate 
 pip install flash-attn --no-build-isolation
+pip install git+https://github.com/wdlctc/headinfer.git@main
 ```
 
 
@@ -48,7 +49,7 @@ python main.py
 
 Running Inference with HeadInfer
 ```python
-
+import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
@@ -57,14 +58,11 @@ from headinfer.mp import mp_headinfer, mp_simulate_decode
 
 model_name = "meta-llama/Meta-Llama-3-8B"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name)
-
-# Wrap the model with HeadInfer
-headinfer_model = HeadInferModel(model)
+model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.bfloat16, low_cpu_mem_usage=True, attn_implementation="flash_attention_2").to("cuda")
 
 # Generate text with long context
 input_text = "Once upon a time in a galaxy far, far away..."
-input_ids = tokenizer(input_text, return_tensors="pt").input_ids
+input_ids = tokenizer(input_text, return_tensors="pt").input_ids.to("cuda")
 
 
 with torch.inference_mode():
